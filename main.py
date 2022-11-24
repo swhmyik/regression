@@ -24,8 +24,14 @@ def main():
   a = X_inv @ X_s.T @ y_s
   #yの予測値を計算
   x_i = np.pi / 4
-  y_i = (x[:, np.newaxis] ** p) @ a
-  print(y_i, np.sqrt(1/2))
+  y_pred = np.squeeze((x[:, np.newaxis] ** p) @ a) #newaxis/squeeze
+  print(y.shape)
+  #評価指標の算出
+  norm_diff = np.sum(np.abs(y - y_pred)) 
+  norm_y = np.sum(np.abs(y)) 
+  eps_score = 1e-8 #10^-8
+  score = norm_diff / (norm_y + eps_score)
+  print(f'{score =:.3f}')
 
   #グラフの作成
   fig = Figure()
@@ -34,7 +40,7 @@ def main():
   ax.set_xlabel('$x$')
   ax.set_ylabel('$y$')
   ax.plot(x,y, label='真の関数 ')
-  ax.plot(x,y_i, label='回帰関数 $\\hat{f} $')
+  ax.plot(x,y_pred, label='回帰関数 $\\hat{f} $')
   ax.axhline(color='#777777')
   ax.axvline(color='#777777')
   ax.scatter(x_sample, y_sample, color='red', label='学習サンプル')
