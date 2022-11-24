@@ -1,5 +1,6 @@
 from matplotlib.figure import Figure
 import numpy as np
+import japanize_matplotlib as _
 
 def main():
   # x, f(x)の準備
@@ -16,10 +17,12 @@ def main():
   ax.set_title('$y= \\sin(\\pi x)$')
   ax.set_xlabel('$x$')
   ax.set_ylabel('$y$')
-  ax.plot(x,y)
+  ax.plot(x,y, label='真の関数 ')
   ax.axhline(color='#777777')
   ax.axvline(color='#777777')
-  ax.scatter(x_sample, y_sample, color='red')
+  ax.scatter(x_sample, y_sample, color='red', label='学習サンプル')
+  ax.legend()
+
   fig.savefig('out.png')
 
 if __name__ == '__main__':
