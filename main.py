@@ -2,6 +2,41 @@ from matplotlib.figure import Figure
 import numpy as np
 import japanize_matplotlib as _
 
+def calculate_score(y,y_pred, eps_score):
+ norm_diff = np.sum(np.abs(y - y_pred)) 
+ norm_y = np.sum(np.abs(y)) 
+ score = norm_diff / (norm_y + eps_score)
+ return score
+
+def save_graph(
+    xy=None, 
+    xy_sample=None, 
+    xy_pred=None,
+    title=None,
+    filename='out.png'
+  ):
+  fig = Figure()
+  ax = fig.add_subplot(1, 1, 1)
+  ax.set_title('$y= \\sin(\\pi x)$')
+  ax.set_xlabel('$x$')
+  ax.set_ylabel('$y$')
+  ax.plot(x,y, label='真の関数 ')
+  ax.plot(x,y_pred, label='回帰関数 $\\hat{f} $')
+  ax.axhline(color='#777777')
+  ax.axvline(color='#777777')
+  if xy is not None:
+    x,y =xy
+    ax.plot(x,y,label='真の関数 $f$')
+  if xy_sample is not None:
+    x_sample,y_sample =xy_sample
+    ax.scatter(x_sample, y_sample, color='red', label='学習サンプル')
+  if xy_pred is not None:
+    x,y_pred = xy_pred
+    ax.plot(x,y_pred, label='回帰関数 $\\hat{f} $')
+  ax.legend()
+
+  fig.savefig(filename)
+
 def main():
   #preparep
   x_min = -1
@@ -34,12 +69,13 @@ def main():
   y_pred = np.squeeze((x[:, np.newaxis] ** p) @ a) #newaxis/squeeze
   print(y.shape)
   #評価指標の算出
-  norm_diff = np.sum(np.abs(y - y_pred)) 
-  norm_y = np.sum(np.abs(y)) 
-  score = norm_diff / (norm_y + eps_score)
+  score = calculate_score(y , y_pred, eps_score)
   print(f'{score =:.3f}')
-
   #グラフの作成
+  save_graph(
+      xy=(x,y), xy_sample=(x_sample, y_sample), xy_pred=(x,y_pred),
+      title=r'$y = \sin(\pi x)$'
+  )
   fig = Figure()
   ax = fig.add_subplot(1, 1, 1)
   ax.set_title('$y= \\sin(\\pi x)$')
