@@ -52,6 +52,10 @@ def main():
     poly =dict(
         d=3,
     ),
+    gp = dict(
+        sigma_x = 0.2,
+        sigma_y = 0.1,
+    ),
     
   )
   regressor = build_regressor(regressor_name, regressor_kwargs)

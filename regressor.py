@@ -38,6 +38,6 @@ def build_regressor(regressor_name,regressor_kwargs):
       poly = PolyRegressor,
       gp = GPRegressor,
    )
-   regressor_cls = REGRESSORS[regressor_name]
-   init_kwargs = regressor_kwargs[regressor_name]
-   return regressor_cls(**init_kwargs)
+    regressor_cls = REGRESSORS[regressor_name]
+    init_kwargs = regressor_kwargs[regressor_name]  
+    return regressor_cls(**init_kwargs)
