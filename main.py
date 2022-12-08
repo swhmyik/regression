@@ -1,6 +1,9 @@
 from matplotlib.figure import Figure
 import numpy as np
 import japanize_matplotlib as _
+from regressor import PolyRegressor
+
+
 
 def calculate_score(y,y_pred, eps_score):
  norm_diff = np.sum(np.abs(y - y_pred)) 
@@ -44,6 +47,7 @@ def main():
   noise_ratio = 0.05
   eps_score = 1e-8 #10^-8
   d = 3
+  regressor = PolyRegressor(d)
   # x, f(x)の準備
   x= np.linspace(x_min,x_max,n_test)
   y= np.sin(np.pi * x)##m
@@ -53,18 +57,10 @@ def main():
   noise_sample = np.random.normal(0, range_y*noise_ratio, (n_train,))
   y_sample = np.sin(np.pi * x_sample) + noise_sample
   #多項式フィッティング
-  ## Xを作る
-  p = np.arange(d+1)[np.newaxis, :]
-  x_s = x_sample[:, np.newaxis]
-  X_s = x_s ** p
-  #係数aを求める
-  y_s = y_sample[:, np.newaxis]
-  print(y_s)
-  X_inv = np.linalg.inv(X_s.T @ X_s)
-  a = X_inv @ X_s.T @ y_s
+  regressor.fit(x_sample,y_sample)
+  y_pred= regressor.predict(x)
   #yの予測値を計算
   x_i = np.pi / 4
-  y_pred = np.squeeze((x[:, np.newaxis] ** p) @ a) #newaxis/squeeze
   print(y.shape)
   #評価指標の算出
   score = calculate_score(y , y_pred, eps_score)
